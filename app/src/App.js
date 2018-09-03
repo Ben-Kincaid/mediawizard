@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
+import {exampleAction} from './actions/actions.js';
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state={};
+    this.props.exampleAction();
+  }
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+      <p>{this.props.examplePropOne}</p>
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <p className="App-intro">
@@ -18,4 +25,15 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    examplePropOne: state.examplePropOne,
+    examplePropTwo: state.examplePropTwo
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({exampleAction}, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
