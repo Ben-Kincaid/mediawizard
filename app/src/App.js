@@ -3,13 +3,59 @@ import './App.css';
 
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import {exampleAction} from './actions/actions.js';
+import { setUploadedFiles, removeUploadedFile, updateUploadedFileQuality} from './actions/actions.js';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state={};
-    this.props.exampleAction();
+    console.log(props);
+    this.state={
+      uploadedFiles: props.uploadedFiles
+    };
+    
+   
+
+    document.addEventListener('keypress', (e) => {
+      console.log('wow');
+      switch (e.key) {
+        case "1": 
+          this.props.removeUploadedFile('123');
+          break;
+        case "2":
+          this.props.setUploadedFiles([
+            {
+              localId: '123',
+              name: '12312313/asdasdad.png',
+              type: 'image/png',
+              location: 'https://wow.com/test-1.png',
+              quality: 50,
+              file: []
+            },
+            {
+              localId: '1234',
+              name: '123123134/asdasdad-2.png',
+              type: 'image/png',
+              location: 'https://wow.com/test-2.png',
+              quality: 52,
+              file: []
+            }
+          ]);
+          console.log(this.props);
+          break;
+        case "3":
+          this.props.updateUploadedFileQuality('123', 22)
+          break;
+        default: return;
+      }
+        
+    })
+      
+
   }
+
+  handleKeyPress = (event) => {
+    
+  }
+
   render() {
     return (
       <div className="App">
@@ -17,23 +63,35 @@ class App extends Component {
       <p>{this.props.examplePropOne}</p>
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div className="App-intro">
+            {(this.state.uploadedFiles ?
+              this.state.uploadedFiles.map((fileObj, i) => (
+                  <p>{fileObj.name}</p>
+              ))
+             : null)}
+        </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    setUploadedFiles: setUploadedFiles,
+    removeUploadedFile: removeUploadedFile,
+    updateUploadedFileQuality: updateUploadedFileQuality
+  }, dispatch);
+}
+
+
+const mapStateToProps = (store) => {
+  console.log(store);
   return {
-    examplePropOne: state.examplePropOne,
-    examplePropTwo: state.examplePropTwo
+    uploadedFiles: store['state'].uploadedFiles
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({exampleAction}, dispatch);
-}
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
