@@ -14,9 +14,41 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import DrawerListItem from './components/DrawerListItem';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+
+
+const sideBarItems = [
+    {
+        title: 'Home',
+        path: '/home',
+        icon: 'home'
+    },
+    {
+        title: 'My Profile',
+        path: '/my-profile',
+        icon: 'account_circle',
+    },
+    {
+        title: 'My Files',
+        path: '/my-files',
+        icon: 'image'
+    },
+    {
+        title: 'Optimize Media',
+        path: '/optimize-media',
+        icon: 'broken_image',
+    },
+    {
+        title: 'Logout',
+        path: '/logout',
+        icon: 'time_to_leave'
+    }
+]
+
+
 const styles = theme => ({
     drawer: {
-        backgroundColor: theme.palette.primary.extraLight,
+        backgroundColor: '#eee',
         width: '25%',
         paddingTop: '4.4rem',
         padding: '4.4rem 1rem 2rem',
@@ -40,33 +72,15 @@ class SidebarContainer extends Component {
                 variant="permanent"
                classes = {{
                    paper: classes.drawer
-               }}
-            >
+               }}>
                 <List>
-                    <DrawerListItem 
-                        itemIcon="home" 
-                        itemTitle="Home" 
-                        itemPath = "/home"/>
-                    <DrawerListItem 
-                        itemIcon="account_circle" 
-                        itemTitle="My Profile" 
-                        itemPath = "/my-profile"/>
-                    <DrawerListItem 
-                        itemIcon="image" 
-                        itemTitle="My Files" 
-                        itemPath="/my-files" />
-                    <DrawerListItem 
-                        itemIcon="broken_image" 
-                        itemTitle="Optimize Media" 
-                        itemPath="/optimize-media" />
-                    <DrawerListItem 
-                        itemIcon="time_to_leave" 
-                        itemTitle="Logout" 
-                        itemPath="/logout" />
-                   
+                    {sideBarItems.map((item, i) => (
+                        <DrawerListItem
+                            itemIcon={item.icon}
+                            itemPath={item.path}
+                            itemTitle={item.title} />
+                    ))}
                 </List>
-                    
-                  
             </Drawer>
            
         )

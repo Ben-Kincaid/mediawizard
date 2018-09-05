@@ -9,8 +9,14 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
     headerBar: {
         backgroundColor: theme.palette.black.main
+    },
+    headerText: {
+        color: '#eee'
     }
 })
+
+
+
 
 class HeaderContainer extends Component {
     constructor(props) {
@@ -23,7 +29,7 @@ class HeaderContainer extends Component {
         return (
             <AppBar position="absolute" classes = {{root: classes.headerBar}}>
                 <Toolbar>
-                    <Typography variant="title" color="inherit" noWrap>
+                    <Typography variant="title" className={classes.headerText} noWrap>
                         MediaWizard
                     </Typography>
                 </Toolbar>

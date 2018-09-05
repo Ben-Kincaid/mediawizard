@@ -9,37 +9,54 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
 
+var active;
 
-var styles = theme => ({
-    listItem: {
-        background: 'blue',
-        '&.active': {
-            backgroundColor: 'red'
-        },
-    
-        
+const styles = theme => ({
+    itemIcon: {
+        color: 'gray',
+        transition: [
+            ['color', '250ms']
+  
+        ]
     },
+    itemText: {
+        color: '#3b3952',
+        fontWeight: 'bold',
+    },
+    divider: {
+        background: 'red',
+    },
+    listItem: {
+        '&.active p': {
+            color: 'black'
+        },
+        '&.active span': {
+            color: 'black'
+        }
+    }
 })
+
+
+
 
 function DrawerListItem(props) {
     const {classes} = props;
+    
     return [
         <ListItem 
             component={NavLink}
             to={props.itemPath}
             className={classes.listItem}
-            activeClassName={'active'}
+           
             button >
-            
             <ListItemIcon>
-                <Icon className="material-icons">{props.itemIcon}</Icon>
+                <Icon className={'material-ui', classes.itemIcon}>{props.itemIcon}</Icon>
             </ListItemIcon>
-            <ListItemText >
-                {props.itemTitle}
+            <ListItemText>
+                <p className = {classes.itemText}>{props.itemTitle}</p>
             </ListItemText>
-          
         </ListItem>,
-        <Divider />
+        <Divider classes = {{root: styles.divider}}/>
     ]
 }
 
@@ -47,7 +64,8 @@ function DrawerListItem(props) {
 DrawerListItem.propTypes = {
     itemIcon: PropTypes.string.isRequired,
     itemTitle: PropTypes.string.isRequired,
-    itemPath: PropTypes.string.isRequired
+    itemPath: PropTypes.string.isRequired,
+    isActive: PropTypes.bool.isRequired
 }
 
 export default withStyles(styles)(DrawerListItem);
