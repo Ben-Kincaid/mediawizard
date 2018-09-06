@@ -16,6 +16,7 @@ const styles = theme => ({
         fontSize: '2.5em',
         fontWeight: 'bold',
         paddingLeft: '10px',
+        textTransform: 'lowercase',
     }
 })
 

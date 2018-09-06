@@ -5,7 +5,7 @@ import CSSTransition from 'react-transition-group/CSSTransition';
 
 const styles = theme => ({
     pageContainer: {
-        padding: '90px 30px 30px 360px',
+        padding: '90px 30px 30px 320px',
         position: 'relative',
         // When the enter transition starts, set the opacity to 0 and 
         // move it to the left 20px. Also set it as absolute to prevent page shifting 

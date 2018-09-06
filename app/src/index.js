@@ -25,19 +25,37 @@ const theme = createMuiTheme({
     typography: {
         
         htmlFontSize: '10px',
-        fontFamily: 'Montseratt, sans-serif',
-        header: {
-            color: '#eee',
-            large: {
-                fontSize: '8em'
+        fontFamily: 'Montserrat',
+        
+        header: { 
+            light: {
+                color: '#eee'
             },
-            '@media(max-width: 1000px)': {
-                fontSize: '6em'
+            large: {
+              
+                lineHeight: '1.1em',
+                fontWeight: '700',
+                fontSize: '8rem',
+            },
+            media: {
+                '@media(max-width: 1000px)': {
+                    fontSize: '6em',
+                    lineHeight: '1.2em'
+                }
             }
+            
         },
-        subheader: {
-            color: '#d2d2d2de',
-            fontSize: '3em'
+        subheader: { 
+            large: {
+                color: '#d2d2d2de',
+                fontSize: '3em',
+                lineHeight: '1.4em',
+            },
+            media: {
+                '@media(max-width: 1000px)': {
+                    lineHeight: '1.5em'
+                }
+            }
         }
     },
 })

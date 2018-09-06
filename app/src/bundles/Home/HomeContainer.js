@@ -9,11 +9,14 @@ const styles = theme => ({
     },
     heroHeaderText: {
         ...theme.typography.header.large,
-        ...theme.typography.header
+        ...theme.typography.header.light,
+        ...theme.typography.header.media
+
     },
     heroSubHeader: {
-        ...theme.typography.subheader,
-        marginTop: '30px'
+        ...theme.typography.subheader.large,
+        marginTop: '30px',
+        ...theme.typography.subheader.media,
     }
 })
 

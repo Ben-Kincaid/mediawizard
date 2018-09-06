@@ -49,7 +49,7 @@ const sideBarItems = [
 const styles = theme => ({
     drawer: {
         backgroundColor: '#eee',
-        width: '300px',
+        width: '260px',
         padding: '4.4em 1rem 2rem',
         zIndex: '1',
         fontSize: '16px',
