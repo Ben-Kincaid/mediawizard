@@ -12,7 +12,10 @@ const styles = theme => ({
         position: 'fixed',
     },
     headerText: {
-        color: '#eee'
+        color: '#eee',
+        fontSize: '2.5em',
+        fontWeight: 'bold',
+        paddingLeft: '10px',
     }
 })
 

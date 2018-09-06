@@ -23,7 +23,9 @@ const theme = createMuiTheme({
         }
     },
     typography: {
+        
         htmlFontSize: '10px',
+        fontFamily: 'Montseratt, sans-serif',
         header: {
             color: '#eee',
             large: {

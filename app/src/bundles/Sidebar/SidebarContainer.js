@@ -53,6 +53,7 @@ const styles = theme => ({
         padding: '4.4em 1rem 2rem',
         zIndex: '1',
         fontSize: '16px',
+        boxShadow: '0px 0px 10px 10px rgba(0, 0, 0, 0.1)',
         '@media(max-width: 950px)': {
             width: '230px'
         }

@@ -22,6 +22,7 @@ const styles = theme => ({
     itemText: {
         color: '#3b3952',
         fontWeight: 'bold',
+        margin: '5px 0',
     },
     divider: {
         background: 'red',
