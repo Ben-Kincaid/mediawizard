@@ -21,7 +21,23 @@ const theme = createMuiTheme({
             main: '#1A1A1A',
             washed: '#1e1e1e',
         }
-    }
+    },
+    typography: {
+        htmlFontSize: '10px',
+        header: {
+            color: '#eee',
+            large: {
+                fontSize: '8em'
+            },
+            '@media(max-width: 1000px)': {
+                fontSize: '6em'
+            }
+        },
+        subheader: {
+            color: '#d2d2d2de',
+            fontSize: '3em'
+        }
+    },
 })
 
 ReactDOM.render(

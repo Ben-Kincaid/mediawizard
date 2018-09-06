@@ -49,12 +49,14 @@ const sideBarItems = [
 const styles = theme => ({
     drawer: {
         backgroundColor: '#eee',
-        width: '25%',
-        paddingTop: '4.4rem',
-        padding: '4.4rem 1rem 2rem',
+        width: '300px',
+        padding: '4.4em 1rem 2rem',
         zIndex: '1',
-        maxWidth: '300px',
-        minWidth: '230px'
+        fontSize: '16px',
+        '@media(max-width: 950px)': {
+            width: '230px'
+        }
+        
     }
 })
 class SidebarContainer extends Component {
@@ -62,12 +64,39 @@ class SidebarContainer extends Component {
         super(props);
         console.log("CONTEXT");
         console.log(this.context);
+        this.sideBarItems = [
+            {
+                title: 'Home',
+                path: '/home',
+                icon: 'home'
+            },
+            {
+                title: 'My Profile',
+                path: '/my-profile',
+                icon: 'account_circle',
+            },
+            {
+                title: 'My Files',
+                path: '/my-files',
+                icon: 'image'
+            },
+            {
+                title: 'Optimize Media',
+                path: '/optimize-media',
+                icon: 'broken_image',
+            },
+            {
+                title: 'Logout',
+                path: '/logout',
+                icon: 'time_to_leave'
+            }
+        ]
     }
 
     render() {
         const {classes} = this.props;
         return (
-            
+
             <Drawer
                 variant="permanent"
                classes = {{
@@ -86,5 +115,6 @@ class SidebarContainer extends Component {
         )
     }
 }
+
 
 export default withStyles(styles)(SidebarContainer);

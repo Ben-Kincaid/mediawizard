@@ -13,18 +13,27 @@ import MyProfileContainer from './bundles/MyProfile/MyProfileContainer';
 import MyFilesContainer from './bundles/MyFiles/MyFilesContainer';
 import RegisterContainer from './bundles/Register/RegisterContainer';
 import OptimizeImagesContainer from './bundles/OptimizeImages/OptimizeImagesContainer';
-
+import PageContainer from './bundles/global/PageContainer';
 import { setUploadedFiles, removeUploadedFile, updateUploadedFileQuality} from './actions/actions.js';
 import Button from '@material-ui/core/Button';
-import './main.css';
-import Grid from '@material-ui/core/Grid';
 
+import Grid from '@material-ui/core/Grid';
+import { withRouter } from 'react-router'
+import {
+  CSSTransition,
+  TransitionGroup,
+} from 'react-transition-group';
 import { withTheme } from '@material-ui/core/styles';
+
+import bgConfig from './config/starBgConfig.js';
+
 class App extends Component {
   constructor(props) {
     super(props);
-    console.log(props.theme.palette.primary);
     
+    window.particlesJS("star-bg", bgConfig);
+
+
 /*
     document.addEventListener('keypress', (e) => {
       console.log('wow');
@@ -71,40 +80,66 @@ class App extends Component {
       
           
           
-          <HeaderContainer className = "header" />
-          <SidebarContainer className = "sidebar" theme={this.props.theme}/>
-        
-          <Route 
-            path="/"  exact
-            render={(props) => <HomeContainer {...props} className = "homePage"/>}
-          />
+        <HeaderContainer containerName = "header" />
+        <SidebarContainer containerName = "sidebar" />
 
-          <Route
-            path="/login" 
-            render={(props) => <LoginContainer {...props} className="LoginPage" />}
-          />
+        <Route render = {({location}) => (
+          <TransitionGroup className="page-sections">
+            <CSSTransition key={location.key} timeout={300} classNames="pageTrans">  
+              <Switch location={location}>
+                <Route 
+                  path="/home"  exact
+                  render={(props) => 
+                    <PageContainer containerName="homePage">
+                      <HomeContainer {...props} />
+                    </PageContainer>
+                  } />
 
-          <Route
-            path="/my-profile"
-            render={(props) => <MyProfileContainer {...props} className="myProfilePage" />}
-          />
+                <Route
+                  path="/login" 
+                  render={(props) => 
+                    <PageContainer containerName="LoginPage">
+                      <LoginContainer {...props} />
+                    </PageContainer>
+                  } />
 
-          <Route
-            path="/my-files"
-            render={(props) => <MyFilesContainer {...props} className="myFilesPage" />}
-          />
+                <Route
+                  path="/my-profile"
+                  render={(props) => 
+                    <PageContainer containerName="myProfilePage">
+                      <MyProfileContainer {...props}/>
+                    </PageContainer>
+                  } />
 
-          <Route
-            path="/register"
-            render={(props) => <RegisterContainer {...props} className="registerPage" />}
-          />
+                <Route
+                  path="/my-files"
+                  render={(props) => 
+                    <PageContainer containerName="myFilesPage">
+                      <MyFilesContainer {...props}/>
+                    </PageContainer>
+                  } />
 
-          <Route
-            path="/optimize-images"
-            render={(props) => <OptimizeImagesContainer {...props} className="optimizeImagesPage" />}
-          />
+                <Route
+                  path="/register"
+                  render={(props) => 
+                    <PageContainer containerName="registerPage" >
+                      <RegisterContainer {...props} />
+                    </PageContainer>
+                  }/>
 
-          <FooterContainer className = "footer"/>
+                <Route
+                  path="/optimize-media"
+                  render={(props) => 
+                    <PageContainer containerName="optimizeImagesPage">
+                      <OptimizeImagesContainer {...props}  />
+                    </PageContainer>
+                  } />
+          
+              </Switch>
+            </CSSTransition>
+          </TransitionGroup>
+        )} />
+        <FooterContainer containerName = "footer"/>
    
       </div>
     );
@@ -128,6 +163,7 @@ const mapStateToProps = (store) => {
   }
 }
 
+const AppWithLocation = withRouter(App);
 
 
 export default withTheme(connect(mapStateToProps, mapDispatchToProps))(App);

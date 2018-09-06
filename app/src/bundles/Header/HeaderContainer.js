@@ -8,7 +8,8 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     headerBar: {
-        backgroundColor: theme.palette.black.main
+        backgroundColor: theme.palette.black.main,
+        position: 'fixed',
     },
     headerText: {
         color: '#eee'
