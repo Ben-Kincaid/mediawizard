@@ -16,7 +16,6 @@ const styles = theme => ({
         color: 'gray',
         transition: [
             ['color', '250ms']
-  
         ]
     },
     itemText: {
@@ -28,12 +27,19 @@ const styles = theme => ({
         background: 'red',
     },
     listItem: {
+        padding: '0',
         '&.active p': {
             color: 'black'
         },
         '&.active span': {
             color: 'black'
         }
+    },
+    listAnchor: {
+        padding: '20px',
+        width: '100%',
+        display: 'flex',
+        textDecoration: 'none'
     }
 })
 
@@ -44,20 +50,21 @@ function DrawerListItem(props) {
     const {classes} = props;
     
     return [
-        <ListItem 
-            component={NavLink}
-            to={props.itemPath}
-            className={classes.listItem}
-           
-            button >
-            <ListItemIcon>
-                <Icon className={'material-ui', classes.itemIcon}>{props.itemIcon}</Icon>
-            </ListItemIcon>
-            <ListItemText>
-                <p className = {classes.itemText}>{props.itemTitle}</p>
-            </ListItemText>
-        </ListItem>,
+        <li>
+            <ListItem 
+                className={classes.listItem}
+                button >
+                <NavLink className = {classes.listAnchor} to ={props.itemPath} >
+                    <ListItemIcon>
+                        <Icon className={['material-ui', classes.itemIcon]}>{props.itemIcon}</Icon>
+                    </ListItemIcon>
+                    <ListItemText>
+                        <p className = {classes.itemText}>{props.itemTitle}</p>
+                    </ListItemText>
+                </NavLink>
+            </ListItem>
         <Divider classes = {{root: styles.divider}}/>
+        </li>
     ]
 }
 
