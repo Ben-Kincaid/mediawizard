@@ -13,7 +13,7 @@ import { store } from '../../store/index.js';
 import { connect } from 'react-redux'
 import OptimizeImagesCard from './OptimizeImagesCard'
 import { bindActionCreators } from 'redux'
-import { setUploadedFiles, removeUploadedFile} from '../../actions/actions'
+import { setUploadedFiles, removeUploadedFile, updateUploadedFileQuality} from '../../actions/actions'
 
 const styles = theme => ({
     optimizeCardContainer: {
@@ -36,10 +36,13 @@ class OptimizeImagesContainer extends Component {
     }
     handleChange = (event) => {
         event.preventDefault();
-        alert('change');
-
+      
+        const state = store.getState()['state'];
         let mappedFiles = Object.keys(event.target.files).map((file, i) => {
-            return event.target.files[i];
+            return {
+                file: event.target.files[i],
+                quality: 100,
+            }
         })
       
         this.props.setUploadedFiles(mappedFiles);
@@ -48,6 +51,27 @@ class OptimizeImagesContainer extends Component {
     handleDelete = (key) => {
         
         this.props.removeUploadedFile(key);
+    }
+
+    handleQualityChange = (value, key) => {
+     
+       this.props.updateUploadedFileQuality(value, key);
+    }
+    byteFormat(bytes) {
+        console.log(bytes)
+        switch (true) {
+            case (bytes <= 1024):
+                return `${bytes} Bytes`;
+                break;
+            case (bytes <= 1048576):
+                return `${Math.round(bytes / 1024)} Kb`;
+                break;
+            case (bytes <= 1073741824):
+                return `${(bytes / 1048576).toFixed(2)} Mb`;
+                break;
+            default:
+                return `Size not found`;
+        }
     }
     render() {
         const state = store.getState()['state'];
@@ -60,6 +84,8 @@ class OptimizeImagesContainer extends Component {
                         handleChange={this.handleChange}
                         uploadedFiles={this.props.uploadedFiles}
                         deleteHandler={this.handleDelete}
+                        byteFormat={this.byteFormat}
+                        handleQualityChange={this.handleQualityChange}
                     />
                 </Card>
             </div>
@@ -72,6 +98,7 @@ const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         setUploadedFiles: setUploadedFiles,
         removeUploadedFile: removeUploadedFile,
+        updateUploadedFileQuality: updateUploadedFileQuality
     }, dispatch);
 }
 

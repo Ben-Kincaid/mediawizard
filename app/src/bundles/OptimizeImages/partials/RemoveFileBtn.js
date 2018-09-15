@@ -17,8 +17,7 @@ const styles = theme => ({
     deleteIcon: {
         position: 'absolute',
         right: 0,
-        top: '50%',
-        transform: 'translateY(-50%)',
+        top: '5px',
         cursor: 'pointer',
         color: '#b8b8b8',
         transition: '0.2s color ease-in-out',

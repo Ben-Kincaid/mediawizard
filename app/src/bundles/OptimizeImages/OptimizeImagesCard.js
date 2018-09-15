@@ -10,7 +10,7 @@ import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { store } from '../../store/index.js';
-
+import Slider from '@material-ui/lab/Slider';
 import RemoveFileBtn from './partials/RemoveFileBtn';
 
 
@@ -51,6 +51,7 @@ const styles = theme => ({
     fileHeader: {
         ...theme.typography.subheader.medium,
         display: 'inline-block',
+        fontWeight: '500',
     },
     fileSmall: {
         ...theme.typography.subheader.small,
@@ -68,27 +69,29 @@ const styles = theme => ({
     hidden: {
         display: 'none',
     },
+    qualitySlider: {
+        '& button': {
+            transition: 'width 250ms cubic-bezier(0.0, 0, 0.2, 1)'
+      
+        }
+    },
+
+    fileQuality: {
+        color: 'black',
+        marginTop: '5px',    
+      
+    },
+
+    fileQualitySpan: {
+        color: '#9b9b9b',
+      
+    }
+
 })
 
-function byteFormat(bytes) {
-    console.log(bytes)
-    switch(true) {
-        case(bytes <= 1024):
-            return `${bytes} Bytes`;
-            break;
-        case(bytes <= 1048576): 
-            return `${Math.round(bytes / 1024)} Kb`;
-            break;
-        case (bytes <= 1073741824):
-            return `${(bytes / 1048576).toFixed(2)} Mb`;
-            break;
-        default: 
-            return `Size not found`;
-    }
-}
 function OptimizeImagesCard(props) {    
-    const { classes, handleUpload, handleChange, uploadedFiles, deleteHandler } = props;
-    console.log(uploadedFiles)
+    const { classes, handleUpload, qualities, handleChange, uploadedFiles, deleteHandler, byteFormat, handleQualityChange } = props;
+   
     return (
         <CardContent>
             <Typography className = {classes.optimizeHeader}>Optimize Images</Typography>
@@ -114,18 +117,25 @@ function OptimizeImagesCard(props) {
                 </form>
                 <div className = {classes.files}>
 
-                    {(uploadedFiles.length > 0 ?
-                        uploadedFiles.map((file, i) => (
+                    {(uploadedFiles.length > 0 ? 
+                        uploadedFiles.map((fileObj, i) => (
                             
                             <div className = {classes.fileContainer} key={i}>
                                
                                 <span className = {classes.fileTop}>
                                     
                                     <Typography className = {classes.fileHeader}>
-                                        {file.name}
+                                        {fileObj.file.name}
                                     </Typography>
                                     <Typography className = {classes.fileSmall}>
-                                        {byteFormat(file.size)}
+                                        {byteFormat(fileObj.file.size)}
+                                        
+                                    </Typography>
+                                    <Typography className = {classes.fileQuality}>
+                                        Quality:
+                                        <span className = {classes.fileQualitySpan}>
+                                        {` ${Math.round(fileObj.quality)}%`}
+                                        </span>
                                     </Typography>
                                     <RemoveFileBtn 
                                         fileKey={i}
@@ -133,6 +143,9 @@ function OptimizeImagesCard(props) {
                                         deleteHandler={deleteHandler}
                                     />
                                 </span>
+                                <div className = {classes.fileBottom}>
+                                    <Slider value={fileObj.quality}  className = {classes.qualitySlider}aria-labelledby="label" onChange={(event, value) => handleQualityChange(value, i)} />
+                                </div>
                             </div>
                         ))
                         : 'no files')}
