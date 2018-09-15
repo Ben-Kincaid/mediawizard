@@ -65,7 +65,8 @@ const reducers = (state = defaultState, action) => {
                         ...file,
                         uploaded: {
                             location: action.location,
-                            size: action.size
+                            size: action.size,
+                            loaded: true,
                         },
                     } : file
                 )

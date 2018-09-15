@@ -32,6 +32,7 @@ const styles = theme => ({
         fontWeight: 'bold',
         marginTop: '2.5em',
         backgroundColor: theme.palette.black.main,
+        fontSize: '14px',
         color: '#eee',
         '&:hover': {
             backgroundColor: theme.palette.black.washed,
@@ -97,7 +98,7 @@ const styles = theme => ({
 })
 
 function OptimizeImagesCard(props) {    
-    const { classes, handleUpload, qualities, handleChange, uploadedFiles, deleteHandler, byteFormat, handleQualityChange } = props;
+    const { classes, handleUpload, qualities, handleChange, uploadedFiles, deleteHandler, byteFormat, handleQualityChange, loading, changeLoading } = props;
    
     return (
         <CardContent>
@@ -118,7 +119,7 @@ function OptimizeImagesCard(props) {
                             Choose File(s)
                         </Button>
                     </label>
-                    <Button disabled={(uploadedFiles.length <= 0 ? true : false)} classes = {{disabled: classes.submitButtonDisabled}} type="submit" name="submit" className={classes.submitButton}>
+                    <Button disabled={(uploadedFiles.length <= 0 || loading !== null ? true : false)} classes = {{disabled: classes.submitButtonDisabled}} type="submit" name="submit" className={classes.submitButton}>
                        {`Optimize ${uploadedFiles.length} Files`}
                     </Button>
                 </form>
@@ -148,12 +149,15 @@ function OptimizeImagesCard(props) {
                                         <span className = {classes.fileQualitySpan}>
                                         {` ${Math.round(fileObj.quality)}%`}
                                         </span>
-                                        <span><a href ={fileObj.uploaded.location} target="_blank">View!</a></span>
+                                      
                                     </Typography>
                                     <RemoveFileBtn 
                                         fileKey={i}
                                         className={classes.removeBtn}
                                         deleteHandler={deleteHandler}
+                                        fileLocation={fileObj.uploaded.location}
+                                        loading={loading}
+                                        changeLoading={changeLoading}
                                     />
                                 </span>
                                 <div className = {classes.fileBottom}>

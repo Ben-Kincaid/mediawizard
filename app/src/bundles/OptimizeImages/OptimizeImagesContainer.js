@@ -31,13 +31,15 @@ const styles = theme => ({
 class OptimizeImagesContainer extends Component {
     constructor(props) {
         super(props);
-        
+        this.state = {
+            loading: null,
+        }
     }
 
-    sendFiles() {
+    sendFiles = () => {
         const state = store.getState()['state'];
         const accessToken = window.localStorage.getItem('token');
-
+      
         var headers = {
             headers: {
                 'x-access-token': accessToken,
@@ -46,7 +48,7 @@ class OptimizeImagesContainer extends Component {
         }
 
         var fd = new FormData();
-        var files = state.uploadedFiles;
+        var files = state.uploadedFiles.filter((file, i) => (file.uploaded.location || file.uploaded.location ? false : true));
         for(var i = 0; i < files.length; i++) {
             fd.append('file', files[i].file);
             fd.append('quality', files[i].quality);
@@ -54,6 +56,7 @@ class OptimizeImagesContainer extends Component {
 
         axios.post(`http://localhost:9091/api/files/upload`, fd, headers)
             .then((response) => {
+                this.changeLoading(false)
                 console.log(response);
             })
     }
@@ -66,12 +69,13 @@ class OptimizeImagesContainer extends Component {
             console.log(response);
             this.props.updateUploadedFileLocation(response.location, response.size, response.key)
         });
+        this.setState({loading: true})
         this.sendFiles();
-  
+        
     }
     handleChange = (event) => {
         event.preventDefault();
-      
+        this.changeLoading(null);
         const state = store.getState()['state'];
         let mappedFiles = Object.keys(event.target.files).map((file, i) => {
             return {
@@ -112,6 +116,9 @@ class OptimizeImagesContainer extends Component {
                 return `Size not found`;
         }
     }
+    changeLoading = (status) => {
+        this.setState({loading: status});
+    }
     render() {
         const state = store.getState()['state'];
         const {classes} = this.props;
@@ -125,6 +132,8 @@ class OptimizeImagesContainer extends Component {
                         deleteHandler={this.handleDelete}
                         byteFormat={this.byteFormat}
                         handleQualityChange={this.handleQualityChange}
+                        changeLoading={(status) => this.changeLoading(status)}
+                        loading={this.state.loading}
                     />
                 </Card>
             </div>

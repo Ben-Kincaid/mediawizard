@@ -23,6 +23,10 @@ const theme = createMuiTheme({
         },
         error: {
             main: '#b24545'
+        },
+        success: {
+            main: '#8acc8a',
+            dark: '#45a945',
         }
     },
     typography: {
