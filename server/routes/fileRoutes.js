@@ -9,7 +9,9 @@ var fileType = require('file-type');
 var imagemin = require('imagemin');
 var imageminMozJpeg = require('imagemin-mozjpeg')
 var imageminPngQuant = require('imagemin-pngquant')
+const io = require('socket.io')();
 var AWS = require('aws-sdk');
+
 
 //Schema for managing 'File' collection in Mongo
 var FileSchema = require('../models/FileSchema');
@@ -67,8 +69,18 @@ const deleteFile = (key) => {
     })
 }
 
-const uploadFile = (userId, buffer, name, type, quality) => {
+io.on('connection', (client) => {
+    client.on('subscribeToUploadProg', (files) => {
+        
+        
+    })
+})
+io.listen(6969);
+const uploadFile = (userId, buffer, name, type, quality, key) => {
     return new Promise((resolve, reject) => {
+        //initialize function to emit data via ws
+        
+
         //make sure quality is a rounded Float
         let qualityFmt = Math.round(parseFloat(quality));
     
@@ -82,33 +94,44 @@ const uploadFile = (userId, buffer, name, type, quality) => {
 
         // After new buffer resolves, upload to S3
         newBuffer.then((buffer) => {
-            console.log(qualityFmt);
-            let params = {
-                ACL: 'public-read',
-                Body: buffer,
-                ContentType: type.mime,
-                Key: `${name}.${type.ext}`
-            };
+            
+          console.log("SIZE");
+       
 
-            s3.upload(params).send((err, data) => {
-                if(err) reject(err);
-                
-                let filePayload = {
-                    userId: userId,
-                    name: `${name}.${type.ext}`,
-                    type: type.mime,
-                    location: data.Location
-                }
-                console.log('uploaded');
-                FileSchema.create(filePayload, (err, record) => {
-                    console.log(err);
-                    console.log(record);
+             
+                console.log(qualityFmt);
+                let params = {
+                    ACL: 'public-read',
+                    Body: buffer,
+                    ContentType: type.mime,
+                    Key: `${name}.${type.ext}`
+                };
+
+                s3.upload(params).send((err, data) => {
                     if(err) reject(err);
-                    console.log("CREATED AND RESOLVED");
-                    resolve(record);
-                })
-            });
+                    console.log("LOCATION");
+                   
+                    console.log(data.size)
+                    io.emit(`imageLocations`, { location: data.Location, size: buffer.byteLength, key });
+                    let filePayload = {
+                        userId: userId,
+                        name: `${name}.${type.ext}`,
+                        type: type.mime,
+                        location: data.Location
+                    }
+
+                    console.log('uploaded');
+                    FileSchema.create(filePayload, (err, record) => {
+                        console.log(err);
+                        console.log(record);
+                        if(err) reject(err);
+                        console.log("CREATED AND RESOLVED");
+                        resolve(record);
+                    })
+                });
+          
         })
+
     })
 }
 
@@ -122,7 +145,7 @@ const uploadFile = (userId, buffer, name, type, quality) => {
 */
 router.post('/upload', upload.any(), function (req, res) {
     
-    
+    console.log(req.files);
     const uploadPromises = req.files.map((file, i) => {   
         let fileQuality = (Array.isArray(req.body.quality) ? 
             req.body.quality[i] : 
@@ -137,7 +160,8 @@ router.post('/upload', upload.any(), function (req, res) {
             file.buffer,
             fileName,
             fileType(file.buffer), 
-            fileQuality 
+            fileQuality,
+            i
         );
     })
 

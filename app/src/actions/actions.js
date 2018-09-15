@@ -42,4 +42,11 @@ export const setUserCredentials = (name, email) => (
     }
 )
 
-
+export const updateUploadedFileLocation = (location, size, key) => (
+    {
+        type: 'UPDATE_UPLOADED_FILE_LOCATION',
+        location,
+        size,
+        key,
+    }
+)

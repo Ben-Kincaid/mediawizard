@@ -54,11 +54,22 @@ const reducers = (state = defaultState, action) => {
                 email: action.email,
             } : null)
             return {
-                
                 ...state,
                 user: userData,
             }
-       
+        case 'UPDATE_UPLOADED_FILE_LOCATION': 
+            return {
+                ...state,
+                uploadedFiles: state.uploadedFiles.map((file, i) => 
+                    i == action.key ? {
+                        ...file,
+                        uploaded: {
+                            location: action.location,
+                            size: action.size
+                        },
+                    } : file
+                )
+            }
         default: return state;
     }
 }

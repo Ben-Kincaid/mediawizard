@@ -37,6 +37,13 @@ const styles = theme => ({
             backgroundColor: theme.palette.black.washed,
         }
     },
+    submitButtonDisabled: {
+        fontWeight: 'bold',
+        marginTop: '2.5em',
+        backgroundColor: theme.palette.black.washed,
+        color: '#efefea !important',
+       
+    },
     filesContainer: {
 
     },
@@ -111,7 +118,7 @@ function OptimizeImagesCard(props) {
                             Choose File(s)
                         </Button>
                     </label>
-                    <Button component="span" type="submit" name="submit" className={classes.submitButton}>
+                    <Button disabled={(uploadedFiles.length <= 0 ? true : false)} classes = {{disabled: classes.submitButtonDisabled}} type="submit" name="submit" className={classes.submitButton}>
                        {`Optimize ${uploadedFiles.length} Files`}
                     </Button>
                 </form>
@@ -128,7 +135,12 @@ function OptimizeImagesCard(props) {
                                         {fileObj.file.name}
                                     </Typography>
                                     <Typography className = {classes.fileSmall}>
-                                        {byteFormat(fileObj.file.size)}
+                                        <span>{byteFormat(fileObj.file.size)}</span>
+                                        {(fileObj.uploaded.size ? 
+                                            <span>{`(${byteFormat(fileObj.uploaded.size)} after optimization)`}</span> :
+                                            null
+                                        )}
+                                       
                                         
                                     </Typography>
                                     <Typography className = {classes.fileQuality}>
@@ -136,6 +148,7 @@ function OptimizeImagesCard(props) {
                                         <span className = {classes.fileQualitySpan}>
                                         {` ${Math.round(fileObj.quality)}%`}
                                         </span>
+                                        <span><a href ={fileObj.uploaded.location} target="_blank">View!</a></span>
                                     </Typography>
                                     <RemoveFileBtn 
                                         fileKey={i}
