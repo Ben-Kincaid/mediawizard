@@ -69,6 +69,23 @@ const styles = theme => ({
         display: 'none',
     },
 })
+
+function byteFormat(bytes) {
+    console.log(bytes)
+    switch(true) {
+        case(bytes <= 1024):
+            return `${bytes} Bytes`;
+            break;
+        case(bytes <= 1048576): 
+            return `${Math.round(bytes / 1024)} Kb`;
+            break;
+        case (bytes <= 1073741824):
+            return `${(bytes / 1048576).toFixed(2)} Mb`;
+            break;
+        default: 
+            return `Size not found`;
+    }
+}
 function OptimizeImagesCard(props) {    
     const { classes, handleUpload, handleChange, uploadedFiles, deleteHandler } = props;
     console.log(uploadedFiles)
@@ -108,7 +125,7 @@ function OptimizeImagesCard(props) {
                                         {file.name}
                                     </Typography>
                                     <Typography className = {classes.fileSmall}>
-                                        {`${file.size / 1000} KB`}
+                                        {byteFormat(file.size)}
                                     </Typography>
                                     <RemoveFileBtn 
                                         fileKey={i}

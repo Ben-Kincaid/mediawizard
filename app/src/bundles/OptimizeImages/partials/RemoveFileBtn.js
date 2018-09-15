@@ -34,7 +34,7 @@ function RemoveFileBtn(props) {
     const {classes, deleteHandler, fileKey} = props;
     return (
      
-        <Icon onClick={() => deleteHandler(fileKey)} className={['material-ui', classes.deleteIcon]}>delete_forever</Icon>
+        <Icon onClick={() => deleteHandler(fileKey)} className={['material-ui', classes.deleteIcon]} title = "Remove file from optimization">delete_forever</Icon>
        
     )
 }
