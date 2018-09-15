@@ -12,10 +12,10 @@ export const removeUserFile = (fileId) => (
     }
 )
 
-export const removeUploadedFile = (localId) => (
+export const removeUploadedFile = (fileKey) => (
     {
         type: 'REMOVE_UPLOADED_FILE',
-        localId
+        fileKey
     }
 )
 
@@ -33,4 +33,13 @@ export const updateUploadedFileQuality = (localId, quality) => (
         localId
     }
 )
+
+export const setUserCredentials = (name, email) => (
+    {
+        type: 'SET_USER_CREDENTIALS',
+        name,
+        email,
+    }
+)
+
 

@@ -19,7 +19,10 @@ const theme = createMuiTheme({
         },
         black: {
             main: '#1A1A1A',
-            washed: '#1e1e1e',
+            washed: '#4e4e4e',
+        },
+        error: {
+            main: '#b24545'
         }
     },
     typography: {
@@ -51,10 +54,38 @@ const theme = createMuiTheme({
                 fontSize: '3em',
                 lineHeight: '1.4em',
             },
+            medium: {
+                color: 'black',
+                fontSize: '1.6em',
+                lineHeight: '1.2em',
+            },
+            small: {
+                color: '#969696de',
+                fontSize: '1.1em',
+            },
             media: {
                 '@media(max-width: 1000px)': {
                     lineHeight: '1.5em'
                 }
+            }
+        },
+        card: {
+            large: {
+                fontSize: '2em',
+                color: '#222',
+
+            },
+            small: {
+                fontSize: '1.2em',
+                color: '#1b1b1bde'
+            },
+            input: {
+                fontSize: '1.2em',
+                marginTop: '15px',
+            },
+            submit: {
+                fontSize: '1.2em',
+                marginTop: '25px'
             }
         }
     },

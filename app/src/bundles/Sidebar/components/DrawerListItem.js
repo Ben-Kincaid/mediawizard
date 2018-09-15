@@ -28,10 +28,10 @@ const styles = theme => ({
     },
     listItem: {
         padding: '0',
-        '&.active p': {
+        '& a.active p': {
             color: 'black'
         },
-        '&.active span': {
+        '& a.active span': {
             color: 'black'
         }
     },

@@ -3,7 +3,7 @@ import './App.css';
 
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import HeaderContainer from './bundles/Header/HeaderContainer';
 import SidebarContainer from './bundles/Sidebar/SidebarContainer';
 import FooterContainer from './bundles/Footer/FooterContainer';
@@ -14,25 +14,27 @@ import MyFilesContainer from './bundles/MyFiles/MyFilesContainer';
 import RegisterContainer from './bundles/Register/RegisterContainer';
 import OptimizeImagesContainer from './bundles/OptimizeImages/OptimizeImagesContainer';
 import PageContainer from './bundles/global/PageContainer';
-import { setUploadedFiles, removeUploadedFile, updateUploadedFileQuality} from './actions/actions.js';
+import {setUserCredentials} from './actions/actions.js';
 import Button from '@material-ui/core/Button';
-
+import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
-import { withRouter } from 'react-router'
+
+
 import {
   CSSTransition,
   TransitionGroup,
 } from 'react-transition-group';
-import { withTheme } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom'
+import jwt from 'jsonwebtoken'
 
 import bgConfig from './config/starBgConfig.js';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    
-    window.particlesJS("star-bg", bgConfig);
 
+    window.particlesJS("star-bg", bgConfig);
+    
 
 /*
     document.addEventListener('keypress', (e) => {
@@ -73,20 +75,54 @@ class App extends Component {
 
   }
 
-  
+  componentDidMount() {
+    this.checkAuth().then((response) => {
+      this.props.setUserCredentials(response.username, response.email);
+    })
+  }
+
+  checkAuth() {
+    return new Promise((resolve, reject) => {
+      const accessToken = window.localStorage.getItem('token');
+
+      if (accessToken) {
+        jwt.verify(accessToken, "THISISMYSECRET", (err, decoded) => {
+          var headers = {
+            headers: {
+              'x-access-token': accessToken,
+
+            }
+
+
+          }
+          axios.get(`http://localhost:9091/api/users/validate/${decoded.id}`, headers).then((response) => {
+            resolve(response.data);
+          }).catch((err) => {
+            reject(err);
+          })
+        })
+      }
+    })
+
+    
+  }
   render() {
+    
     return (
       <div className="root">
       
           
           
         <HeaderContainer containerName = "header" />
-        <SidebarContainer containerName = "sidebar" />
-
+        <SidebarContainer containerName = "sidebar"/>
+        
         <Route render = {({location}) => (
+         
           <TransitionGroup className="page-sections">
+            <p>{location.pathname}</p>
             <CSSTransition key={location.key} timeout={300} classNames="pageTrans">  
               <Switch location={location}>
+             
                 <Route 
                   path="/home"  exact
                   render={(props) => 
@@ -134,6 +170,18 @@ class App extends Component {
                       <OptimizeImagesContainer {...props}  />
                     </PageContainer>
                   } />
+                <Route
+                  path="/logout"
+                  render={(props) => {
+                    if (window.localStorage.getItem('token')) {
+                      window.localStorage.removeItem('token');
+                      this.props.setUserCredentials(null, null);
+                      return (<Redirect to="/login" />)
+                    } else {
+                      return (<Redirect to="/login" />)
+                    }
+                   
+                  }} />
           
               </Switch>
             </CSSTransition>
@@ -149,9 +197,7 @@ class App extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-    setUploadedFiles: setUploadedFiles,
-    removeUploadedFile: removeUploadedFile,
-    updateUploadedFileQuality: updateUploadedFileQuality
+    setUserCredentials: setUserCredentials
   }, dispatch);
 }
 
@@ -159,11 +205,11 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (store) => {
   console.log(store);
   return {
-    uploadedFiles: store['state'].uploadedFiles
+    user: store['state'].user
   }
 }
 
-const AppWithLocation = withRouter(App);
 
 
-export default withTheme(connect(mapStateToProps, mapDispatchToProps))(App);
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

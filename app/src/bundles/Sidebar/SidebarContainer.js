@@ -16,6 +16,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DrawerListItem from './components/DrawerListItem';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
+import {store} from '../../store/index.js';
+
 
 const sideBarItems = [
     {
@@ -63,38 +65,59 @@ const styles = theme => ({
 class SidebarContainer extends Component {
     constructor(props) {
         super(props);
-        console.log("CONTEXT");
-        console.log(this.context);
-        this.sideBarItems = [
+
+        this.sideBarList = [
             {
                 title: 'Home',
                 path: '/home',
-                icon: 'home'
+                icon: 'home',
+                location: 'all',
             },
             {
                 title: 'My Profile',
                 path: '/my-profile',
                 icon: 'account_circle',
+                location: 'authorized',
             },
             {
                 title: 'My Files',
                 path: '/my-files',
-                icon: 'image'
+                icon: 'image',
+                location: 'authorized',
             },
             {
                 title: 'Optimize Media',
                 path: '/optimize-media',
                 icon: 'broken_image',
+                location: 'authorized',
             },
             {
                 title: 'Logout',
                 path: '/logout',
-                icon: 'time_to_leave'
+                icon: 'time_to_leave',
+                location: 'authorized',
+            },
+            {
+                title: 'Login/Register',
+                path: '/login',
+                icon: 'time_to_leave',
+                location: 'unauthorized'
             }
         ]
+
+
+       
+
+       
+
+            
+       
     }
+    
 
     render() {
+   
+        const state = store.getState()['state'];
         const {classes} = this.props;
         return (
 
@@ -103,13 +126,18 @@ class SidebarContainer extends Component {
                classes = {{
                    paper: classes.drawer
                }}>
-                <List>
-                    {sideBarItems.map((item, i) => (
-                        <DrawerListItem
-                            itemIcon={item.icon}
-                            itemPath={item.path}
-                            itemTitle={item.title} />
-                    ))}
+                <List> 
+                    {this.sideBarList.map((item, i) => {
+                        let accessLevel = (state.user ? 'authorized' : 'unauthorized');
+                        if(item.location == 'all' || item.location == accessLevel) {
+                            return (
+                            <DrawerListItem
+                                itemIcon={item.icon}
+                                itemPath={item.path}
+                                itemTitle={item.title} />
+                            )
+                        }
+                    })}
                 </List>
             </Drawer>
            

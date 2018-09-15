@@ -3,6 +3,7 @@ let defaultState = {
     userEmail: null,
     userFiles: [],
     uploadedFiles: [], 
+    user: null,
 }
 
 const reducers = (state = defaultState, action) => {
@@ -15,6 +16,7 @@ const reducers = (state = defaultState, action) => {
                 
             }
         case 'SET_UPLOADED_FILES':
+        console.log(state.uploadedFiles);
             return {
                 ...state,
                 uploadedFiles: state.uploadedFiles.concat(action.files),
@@ -42,9 +44,20 @@ const reducers = (state = defaultState, action) => {
             return {
                 ...state,
                 uploadedFiles: state.uploadedFiles.filter((file, i) => 
-                    file.localId == action.localId ? false : true
+                    i == action.fileKey ? false : true
                 )
             }
+        case 'SET_USER_CREDENTIALS':
+            var userData = (action.name !== null || action.email !== null ? {
+                username: action.name,
+                email: action.email,
+            } : null)
+            return {
+                
+                ...state,
+                user: userData,
+            }
+       
         default: return state;
     }
 }
