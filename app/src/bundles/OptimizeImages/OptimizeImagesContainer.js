@@ -13,7 +13,9 @@ import { store } from '../../store/index.js';
 import { connect } from 'react-redux'
 import OptimizeImagesCard from './OptimizeImagesCard'
 import { bindActionCreators } from 'redux'
-import { setUploadedFiles, removeUploadedFile} from '../../actions/actions'
+import { setUploadedFiles, removeUploadedFile, updateUploadedFileQuality, updateUploadedFileLocation} from '../../actions/actions'
+import axios from 'axios';
+import { subscribeToUploadProg } from '../../ws';
 
 const styles = theme => ({
     optimizeCardContainer: {
@@ -24,22 +26,64 @@ const styles = theme => ({
         maxWidth: '900px'
     }
 }) 
+
+
 class OptimizeImagesContainer extends Component {
     constructor(props) {
         super(props);
-        
+        this.state = {
+            loading: null,
+        }
     }
-    handleUpload(event) {
+
+    sendFiles = () => {
+        const state = store.getState()['state'];
+        const accessToken = window.localStorage.getItem('token');
+      
+        var headers = {
+            headers: {
+                'x-access-token': accessToken,
+                'content-type': 'multipart/form-data'
+            }
+        }
+
+        var fd = new FormData();
+        var files = state.uploadedFiles.filter((file, i) => (file.uploaded.location || file.uploaded.location ? false : true));
+        for(var i = 0; i < files.length; i++) {
+            fd.append('file', files[i].file);
+            fd.append('quality', files[i].quality);
+        }
+
+        axios.post(`http://localhost:9091/api/files/upload`, fd, headers)
+            .then((response) => {
+                this.changeLoading(false)
+                console.log(response);
+            })
+    }
+
+    handleUpload = (event) => {
+        const state = store.getState()['state'];
         event.preventDefault();
-        alert('upload');
-  
+        subscribeToUploadProg((response) => {
+            this.props.updateUploadedFileLocation(response.location, response.size, response.key)
+        });
+        this.setState({loading: true})
+        this.sendFiles();
+        
     }
     handleChange = (event) => {
         event.preventDefault();
-        alert('change');
-
+        this.changeLoading(null);
+        const state = store.getState()['state'];
         let mappedFiles = Object.keys(event.target.files).map((file, i) => {
-            return event.target.files[i];
+            return {
+                file: event.target.files[i],
+                quality: 100,
+                uploaded: {
+                  location: null,
+                  size: null,  
+                }
+            }
         })
       
         this.props.setUploadedFiles(mappedFiles);
@@ -48,6 +92,30 @@ class OptimizeImagesContainer extends Component {
     handleDelete = (key) => {
         
         this.props.removeUploadedFile(key);
+    }
+
+    handleQualityChange = (value, key) => {
+     
+       this.props.updateUploadedFileQuality(value, key);
+    }
+    byteFormat(bytes) {
+        console.log(bytes)
+        switch (true) {
+            case (bytes <= 1024):
+                return `${bytes} Bytes`;
+                break;
+            case (bytes <= 1048576):
+                return `${Math.round(bytes / 1024)} Kb`;
+                break;
+            case (bytes <= 1073741824):
+                return `${(bytes / 1048576).toFixed(2)} Mb`;
+                break;
+            default:
+                return `Size not found`;
+        }
+    }
+    changeLoading = (status) => {
+        this.setState({loading: status});
     }
     render() {
         const state = store.getState()['state'];
@@ -60,6 +128,10 @@ class OptimizeImagesContainer extends Component {
                         handleChange={this.handleChange}
                         uploadedFiles={this.props.uploadedFiles}
                         deleteHandler={this.handleDelete}
+                        byteFormat={this.byteFormat}
+                        handleQualityChange={this.handleQualityChange}
+                        changeLoading={(status) => this.changeLoading(status)}
+                        loading={this.state.loading}
                     />
                 </Card>
             </div>
@@ -72,6 +144,8 @@ const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         setUploadedFiles: setUploadedFiles,
         removeUploadedFile: removeUploadedFile,
+        updateUploadedFileQuality: updateUploadedFileQuality,
+        updateUploadedFileLocation: updateUploadedFileLocation
     }, dispatch);
 }
 

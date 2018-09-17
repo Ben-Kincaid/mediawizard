@@ -19,33 +19,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import {store} from '../../store/index.js';
 
 
-const sideBarItems = [
-    {
-        title: 'Home',
-        path: '/home',
-        icon: 'home'
-    },
-    {
-        title: 'My Profile',
-        path: '/my-profile',
-        icon: 'account_circle',
-    },
-    {
-        title: 'My Files',
-        path: '/my-files',
-        icon: 'image'
-    },
-    {
-        title: 'Optimize Media',
-        path: '/optimize-media',
-        icon: 'broken_image',
-    },
-    {
-        title: 'Logout',
-        path: '/logout',
-        icon: 'time_to_leave'
-    }
-]
+
 
 
 const styles = theme => ({
@@ -71,7 +45,7 @@ class SidebarContainer extends Component {
                 title: 'Home',
                 path: '/home',
                 icon: 'home',
-                location: 'all',
+                location: 'unauthorized',
             },
             {
                 title: 'My Profile',

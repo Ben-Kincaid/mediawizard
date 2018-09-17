@@ -18,7 +18,7 @@ import {setUserCredentials} from './actions/actions.js';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
-
+import { subscribeToUploadProg } from './ws';
 
 import {
   CSSTransition,
@@ -32,7 +32,7 @@ import bgConfig from './config/starBgConfig.js';
 class App extends Component {
   constructor(props) {
     super(props);
-
+   
     window.particlesJS("star-bg", bgConfig);
     
 

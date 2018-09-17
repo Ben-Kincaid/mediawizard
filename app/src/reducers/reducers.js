@@ -16,17 +16,18 @@ const reducers = (state = defaultState, action) => {
                 
             }
         case 'SET_UPLOADED_FILES':
-        console.log(state.uploadedFiles);
+            
             return {
                 ...state,
-                uploadedFiles: state.uploadedFiles.concat(action.files),
+                uploadedFiles: [...action.files, ...state.uploadedFiles],
+                
          
             }
         case 'UPDATE_UPLOADED_FILE_QUALITY':
             return {
                 ...state,
                 uploadedFiles: state.uploadedFiles.map((file, i) => 
-                    file.localId == action.localId ? {
+                    i == action.key ? {
                         ...file, 
                         quality: action.quality
                     } : file
@@ -53,11 +54,23 @@ const reducers = (state = defaultState, action) => {
                 email: action.email,
             } : null)
             return {
-                
                 ...state,
                 user: userData,
             }
-       
+        case 'UPDATE_UPLOADED_FILE_LOCATION': 
+            return {
+                ...state,
+                uploadedFiles: state.uploadedFiles.map((file, i) => 
+                    i == action.key ? {
+                        ...file,
+                        uploaded: {
+                            location: action.location,
+                            size: action.size,
+                            loaded: true,
+                        },
+                    } : file
+                )
+            }
         default: return state;
     }
 }

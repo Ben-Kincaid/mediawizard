@@ -26,11 +26,11 @@ export const setUploadedFiles = (files) => (
     }   
 )
 
-export const updateUploadedFileQuality = (localId, quality) => (
+export const updateUploadedFileQuality = (quality, key) => (
     {
         type: 'UPDATE_UPLOADED_FILE_QUALITY',
         quality,
-        localId
+        key
     }
 )
 
@@ -42,4 +42,11 @@ export const setUserCredentials = (name, email) => (
     }
 )
 
-
+export const updateUploadedFileLocation = (location, size, key) => (
+    {
+        type: 'UPDATE_UPLOADED_FILE_LOCATION',
+        location,
+        size,
+        key,
+    }
+)
