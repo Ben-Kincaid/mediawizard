@@ -40,10 +40,11 @@ class App extends Component {
 
   componentDidMount() {
     this.checkAuth().then((response) => {
-      this.props.setUserCredentials(response.username, response.email, true);
+      console.log(response);
+      this.props.setUserCredentials(response._id, response.username, response.email, true);
     }).catch((err) => {
       console.log(err);
-      this.props.setUserCredentials(null, null, false)
+      this.props.setUserCredentials(null, null, null, false)
     })
   }
 

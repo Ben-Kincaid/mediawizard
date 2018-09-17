@@ -2,7 +2,6 @@ import HomeContainer from '../bundles/Home/HomeContainer';
 import LoginContainer from '../bundles/Login/LoginContainer';
 import MyProfileContainer from '../bundles/MyProfile/MyProfileContainer';
 import MyFilesContainer from '../bundles/MyFiles/MyFilesContainer';
-
 import OptimizeImagesContainer from '../bundles/OptimizeImages/OptimizeImagesContainer';
 
 

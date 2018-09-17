@@ -1,6 +1,6 @@
 export const setUserFiles = (files) => (
     {
-        type: 'GET_USER_FILES',
+        type: 'SET_USER_FILES',
         files
     }
 )
@@ -34,9 +34,10 @@ export const updateUploadedFileQuality = (quality, key) => (
     }
 )
 
-export const setUserCredentials = (name, email, auth) => (
+export const setUserCredentials = (userId, name, email, auth) => (
     {
         type: 'SET_USER_CREDENTIALS',
+        userId,
         name,
         email,
         auth,

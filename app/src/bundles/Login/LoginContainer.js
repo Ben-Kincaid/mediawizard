@@ -51,11 +51,12 @@ class LoginContainer extends Component {
             name: this.state.loginName,
             password: this.state.loginPass
         }).then((response) => {
-            
+            console.log("RESPONSE:");
+            console.log(response);
             if(response.status === 200) {
                 localStorage.setItem("token", response.data.token);
                 this.setState({validationText: 'successfully logged in!'})
-                this.props.setUserCredentials(response.data.user.username, response.data.user.email, true);
+                this.props.setUserCredentials(response.data.user._id, response.data.user.username, response.data.user.email, true);
                 console.log(response);
                 setTimeout(() => {
                     this.props.history.push('/my-profile');   
