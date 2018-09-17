@@ -1,27 +1,21 @@
 let defaultState = {
-    userName: null,
-    userEmail: null,
     userFiles: [],
     uploadedFiles: [], 
     user: null,
+    auth: null,
 }
 
 const reducers = (state = defaultState, action) => {
     switch(action.type) {
         case 'GET_USER_FILES':
-            alert('getting file...')
             return {
                 ...state,
                 userFiles: action.files,
-                
             }
         case 'SET_UPLOADED_FILES':
-            
             return {
                 ...state,
                 uploadedFiles: [...action.files, ...state.uploadedFiles],
-                
-         
             }
         case 'UPDATE_UPLOADED_FILE_QUALITY':
             return {
@@ -34,7 +28,6 @@ const reducers = (state = defaultState, action) => {
                 )
             }
         case 'REMOVE_USER_FILE':
-            alert('removing file...')
             return {
                 ...state,
                 userFiles: state.userFiles.filter((file, i) => 
@@ -49,13 +42,15 @@ const reducers = (state = defaultState, action) => {
                 )
             }
         case 'SET_USER_CREDENTIALS':
-            var userData = (action.name !== null || action.email !== null ? {
+            let userData = (action.name !== null && action.email !== null ? {
                 username: action.name,
                 email: action.email,
             } : null)
+            
             return {
                 ...state,
                 user: userData,
+                auth: action.auth
             }
         case 'UPDATE_UPLOADED_FILE_LOCATION': 
             return {

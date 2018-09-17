@@ -19,65 +19,31 @@ import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import { subscribeToUploadProg } from './ws';
-
+import PageRoute from './bundles/global/PageRoute';
 import {
   CSSTransition,
   TransitionGroup,
 } from 'react-transition-group';
 import { withRouter } from 'react-router-dom'
 import jwt from 'jsonwebtoken'
-
+import {store} from './store/index'
 import bgConfig from './config/starBgConfig.js';
-
+import routes from './config/routeConfig.js';
 class App extends Component {
   constructor(props) {
     super(props);
-   
+  
     window.particlesJS("star-bg", bgConfig);
     
-
-/*
-    document.addEventListener('keypress', (e) => {
-      console.log('wow');
-      switch (e.key) {
-        case "1": 
-          this.props.removeUploadedFile('123');
-          break;
-        case "2":
-          this.props.setUploadedFiles([
-            {
-              localId: '123',
-              name: '12312313/asdasdad.png',
-              type: 'image/png',
-              location: 'https://wow.com/test-1.png',
-              quality: 50,
-              file: []
-            },
-            {
-              localId: '1234',
-              name: '123123134/asdasdad-2.png',
-              type: 'image/png',
-              location: 'https://wow.com/test-2.png',
-              quality: 52,
-              file: []
-            }
-          ]);
-          console.log(this.props);
-          break;
-        case "3":
-          this.props.updateUploadedFileQuality('123', 22)
-          break;
-        default: return;
-      }
-        
-    }) */
-      
-
+   
   }
 
   componentDidMount() {
     this.checkAuth().then((response) => {
-      this.props.setUserCredentials(response.username, response.email);
+      this.props.setUserCredentials(response.username, response.email, true);
+    }).catch((err) => {
+      console.log(err);
+      this.props.setUserCredentials(null, null, false)
     })
   }
 
@@ -87,20 +53,17 @@ class App extends Component {
 
       if (accessToken) {
         jwt.verify(accessToken, "THISISMYSECRET", (err, decoded) => {
-          var headers = {
-            headers: {
-              'x-access-token': accessToken,
-
-            }
-
-
-          }
+          if(err) reject(err);
+          
+          var headers = {headers: {'x-access-token': accessToken}}
           axios.get(`http://localhost:9091/api/users/validate/${decoded.id}`, headers).then((response) => {
             resolve(response.data);
           }).catch((err) => {
             reject(err);
           })
         })
+      } else {
+        reject('No token present')
       }
     })
 
@@ -108,89 +71,42 @@ class App extends Component {
   }
   render() {
     
+    const userRoutes = routes.filter((route, i) => {
+      const state = store.getState()['state'];
+      if(state.auth == true) {
+        return (route.location == 'authorized' || route.location == 'all' ? true : false)
+      } else {
+        return (route.location == 'unauthorized' || route.location == 'all' ? true : false)
+      } 
+    })
+
     return (
-      <div className="root">
-      
-          
-          
+      <div className="root">          
         <HeaderContainer containerName = "header" />
-        <SidebarContainer containerName = "sidebar"/>
+        <SidebarContainer containerName = "sidebar" userRoutes = {userRoutes}/>
+        <Route render={({location}) => (
         
-        <Route render = {({location}) => (
-         
           <TransitionGroup className="page-sections">
-            <p>{location.pathname}</p>
             <CSSTransition key={location.key} timeout={300} classNames="pageTrans">  
-              <Switch location={location}>
-             
-                <Route 
-                  path="/home"  exact
-                  render={(props) => 
-                    <PageContainer containerName="homePage">
-                      <HomeContainer {...props} />
-                    </PageContainer>
-                  } />
-
-                <Route
-                  path="/login" 
-                  render={(props) => 
-                    <PageContainer containerName="LoginPage">
-                      <LoginContainer {...props} />
-                    </PageContainer>
-                  } />
-
-                <Route
-                  path="/my-profile"
-                  render={(props) => 
-                    <PageContainer containerName="myProfilePage">
-                      <MyProfileContainer {...props}/>
-                    </PageContainer>
-                  } />
-
-                <Route
-                  path="/my-files"
-                  render={(props) => 
-                    <PageContainer containerName="myFilesPage">
-                      <MyFilesContainer {...props}/>
-                    </PageContainer>
-                  } />
-
-                <Route
-                  path="/register"
-                  render={(props) => 
-                    <PageContainer containerName="registerPage" >
-                      <RegisterContainer {...props} />
-                    </PageContainer>
-                  }/>
-
-                <Route
-                  path="/optimize-media"
-                  render={(props) => 
-                    <PageContainer containerName="optimizeImagesPage">
-                      <OptimizeImagesContainer {...props}  />
-                    </PageContainer>
-                  } />
-                <Route
-                  path="/logout"
-                  render={(props) => {
-                    if (window.localStorage.getItem('token')) {
-                      window.localStorage.removeItem('token');
-                      this.props.setUserCredentials(null, null);
-                      return (<Redirect to="/login" />)
-                    } else {
-                      return (<Redirect to="/login" />)
-                    }
-                   
-                  }} />
-          
-              </Switch>
+              <Switch location={this.props.location}>
+                {(userRoutes.map((route, i) => (
+                  <Route
+                    path={route.path}
+                    render={(renderProps) =>
+                      <PageContainer containerName={route.containerName}>
+                        {React.createElement(route.component, renderProps)}
+                      </PageContainer>
+                    } />
+                )))}
+               
+            </Switch>
             </CSSTransition>
           </TransitionGroup>
         )} />
         <FooterContainer containerName = "footer"/>
    
       </div>
-    );
+    )
   }
 }
 
@@ -205,7 +121,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (store) => {
   console.log(store);
   return {
-    user: store['state'].user
+    user: store['state'].user,
+    auth: store['state'].auth,
   }
 }
 

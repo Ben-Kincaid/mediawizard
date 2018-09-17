@@ -34,11 +34,12 @@ export const updateUploadedFileQuality = (quality, key) => (
     }
 )
 
-export const setUserCredentials = (name, email) => (
+export const setUserCredentials = (name, email, auth) => (
     {
         type: 'SET_USER_CREDENTIALS',
         name,
         email,
+        auth,
     }
 )
 
