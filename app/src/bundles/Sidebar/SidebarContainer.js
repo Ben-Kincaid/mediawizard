@@ -37,61 +37,10 @@ const styles = theme => ({
     }
 })
 class SidebarContainer extends Component {
-    constructor(props) {
-        super(props);
-
-        this.sideBarList = [
-            {
-                title: 'Home',
-                path: '/home',
-                icon: 'home',
-                location: 'unauthorized',
-            },
-            {
-                title: 'My Profile',
-                path: '/my-profile',
-                icon: 'account_circle',
-                location: 'authorized',
-            },
-            {
-                title: 'My Files',
-                path: '/my-files',
-                icon: 'image',
-                location: 'authorized',
-            },
-            {
-                title: 'Optimize Media',
-                path: '/optimize-media',
-                icon: 'broken_image',
-                location: 'authorized',
-            },
-            {
-                title: 'Logout',
-                path: '/logout',
-                icon: 'time_to_leave',
-                location: 'authorized',
-            },
-            {
-                title: 'Login/Register',
-                path: '/login',
-                icon: 'time_to_leave',
-                location: 'unauthorized'
-            }
-        ]
-
-
-       
-
-       
-
-            
-       
-    }
-    
-
     render() {
    
         const state = store.getState()['state'];
+        console.log(state.auth);
         const {classes} = this.props;
         return (
 
@@ -101,17 +50,15 @@ class SidebarContainer extends Component {
                    paper: classes.drawer
                }}>
                 <List> 
-                    {this.sideBarList.map((item, i) => {
-                        let accessLevel = (state.user ? 'authorized' : 'unauthorized');
-                        if(item.location == 'all' || item.location == accessLevel) {
-                            return (
-                            <DrawerListItem
-                                itemIcon={item.icon}
-                                itemPath={item.path}
-                                itemTitle={item.title} />
-                            )
-                        }
-                    })}
+                    {(state.auth !== null  ? 
+                        this.props.userRoutes.map((item, i) => {           
+                                return (
+                                <DrawerListItem
+                                    itemIcon={item.icon}
+                                    itemPath={item.path}
+                                    itemTitle={item.title} />
+                                )
+                        }) : 'loading...')} 
                 </List>
             </Drawer>
            
