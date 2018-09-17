@@ -81,7 +81,7 @@ function RemoveFileBtn(props) {
             }
         } else {
             return (
-                <a href = {fileLocation} >
+                <a href = {fileLocation} download>
                     <Icon
                         className={['material-ui', classes.downloadIcon]}
                         title="Download file">cloud_download</Icon > 
@@ -93,17 +93,6 @@ function RemoveFileBtn(props) {
     return (
         <div>
             {buttonMarkup(loading)}
-{/*             
-            <a href = {fileLocation} >
-                <Icon
-                    className={['material-ui', classes.downloadIcon]}
-                        title="Download file">cloud_download</Icon> 
-            </a> :
-                <Icon
-                    onClick={() => deleteHandler(fileKey)}
-                    className={['material-ui', classes.deleteIcon]}
-                    title="Remove file">delete_forever</Icon> 
-            )} */}
         </div>
       
        

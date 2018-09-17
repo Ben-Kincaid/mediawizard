@@ -65,8 +65,6 @@ class OptimizeImagesContainer extends Component {
         const state = store.getState()['state'];
         event.preventDefault();
         subscribeToUploadProg((response) => {
-            console.log('SOCKET: uploaded image')
-            console.log(response);
             this.props.updateUploadedFileLocation(response.location, response.size, response.key)
         });
         this.setState({loading: true})

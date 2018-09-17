@@ -99,7 +99,23 @@ const styles = theme => ({
 
 function OptimizeImagesCard(props) {    
     const { classes, handleUpload, qualities, handleChange, uploadedFiles, deleteHandler, byteFormat, handleQualityChange, loading, changeLoading } = props;
-   
+    const optimizeText = (loadingStatus) => {
+        if(loadingStatus == true) {
+            return `Optimizing...`
+        } else if(loadingStatus == false) {
+            return `Optimized!`
+        } else {
+            var pendingFiles = uploadedFiles.filter((file, i) => {
+                console.log(file);
+                if(file.uploaded.location || file.uploaded.size) {
+                    return false;
+                } else {
+                    return true;
+                }
+            })
+            return `Optimize ${pendingFiles.length} Files`
+        }
+    }
     return (
         <CardContent>
             <Typography className = {classes.optimizeHeader}>Optimize Images</Typography>
@@ -120,7 +136,7 @@ function OptimizeImagesCard(props) {
                         </Button>
                     </label>
                     <Button disabled={(uploadedFiles.length <= 0 || loading !== null ? true : false)} classes = {{disabled: classes.submitButtonDisabled}} type="submit" name="submit" className={classes.submitButton}>
-                       {`Optimize ${uploadedFiles.length} Files`}
+                      {optimizeText(loading)}
                     </Button>
                 </form>
                 <div className = {classes.files}>
@@ -161,7 +177,7 @@ function OptimizeImagesCard(props) {
                                     />
                                 </span>
                                 <div className = {classes.fileBottom}>
-                                    <Slider value={fileObj.quality}  className = {classes.qualitySlider}aria-labelledby="label" onChange={(event, value) => handleQualityChange(value, i)} />
+                                    <Slider value={fileObj.quality}  disabled={(fileObj.uploaded.location || fileObj.uploaded.size || loading === true ? true : false)} className = {classes.qualitySlider}aria-labelledby="label" onChange={(event, value) => handleQualityChange(value, i)} />
                                 </div>
                             </div>
                         ))
