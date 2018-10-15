@@ -40,14 +40,7 @@ const routes = [
         containerName: 'optimizeMedia',
         component: OptimizeImagesContainer,
     },
-    {
-        title: 'Logout',
-        path: '/logout',
-        icon: 'time_to_leave',
-        location: 'authorized',
-        containerName: 'logOut',
-        component: HomeContainer,
-    },
+ 
     {
         title: 'Login/Register',
         path: '/login',

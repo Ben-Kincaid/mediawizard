@@ -110,9 +110,10 @@ const uploadFile = (userId, buffer, name, type, quality, key) => {
                 s3.upload(params).send((err, data) => {
                     if(err) reject(err);
                     console.log("LOCATION");
-                   
-                    console.log(data.size)
-                    io.emit(`imageLocations`, { location: data.Location, size: buffer.byteLength, key });
+                    console.log('DATA!');
+                    console.log(data);
+                    
+                    io.emit(`imageLocations`, { location: data.Location, size: buffer.byteLength, base64: buffer.toString('base64'), key });
                     let filePayload = {
                         userId: userId,
                         name: `${name}.${type.ext}`,

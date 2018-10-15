@@ -56,32 +56,21 @@ function onClick() {
     alert('clicked!');
 }
 function RemoveFileBtn(props) {
-    const {classes, deleteHandler, fileKey, fileLocation, fileLoaded, loading} = props;
+    const {classes, fileName, deleteHandler,fileLocation, fileKey, base64, fileLoaded, pending} = props;
     const buttonMarkup = (loadedState) => {
         if(!fileLocation) {
-            switch(loadedState) {
-                case null:
-                    return (
-                        <Icon
-                            onClick={() => deleteHandler(fileKey)}
-                            className={['material-ui', classes.deleteIcon]}
-                            title="Remove file">delete_forever</Icon> 
-                    )
-                    break;
-                case true:
-                    return (
-                        <Icon
-                            className={['material-ui', classes.loadingIcon]}
-                            title="Remove file">cached</Icon> 
-                    )
-                    break;
-                case false:
-                    return (<p>Loaded!</p>);
-                    break;
-            }
+            return (pending === true 
+                ? <Icon
+                    className={['material-ui', classes.loadingIcon]}
+                    title="Remove file">cached</Icon> 
+                : <Icon
+                    onClick={() => deleteHandler(fileKey)}
+                    className={['material-ui', classes.deleteIcon]}
+                     title="Remove file">delete_forever</Icon> 
+            )
         } else {
             return (
-                <a href = {fileLocation} download>
+                <a href={`data:image/jpeg;base64,${base64}`} download={fileName}>
                     <Icon
                         className={['material-ui', classes.downloadIcon]}
                         title="Download file">cloud_download</Icon > 
@@ -92,7 +81,7 @@ function RemoveFileBtn(props) {
     }
     return (
         <div>
-            {buttonMarkup(loading)}
+            {buttonMarkup(pending)}
         </div>
       
        

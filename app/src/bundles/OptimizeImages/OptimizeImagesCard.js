@@ -98,24 +98,8 @@ const styles = theme => ({
 })
 
 function OptimizeImagesCard(props) {    
-    const { classes, handleUpload, qualities, handleChange, uploadedFiles, deleteHandler, byteFormat, handleQualityChange, loading, changeLoading } = props;
-    const optimizeText = (loadingStatus) => {
-        if(loadingStatus == true) {
-            return `Optimizing...`
-        } else if(loadingStatus == false) {
-            return `Optimized!`
-        } else {
-            var pendingFiles = uploadedFiles.filter((file, i) => {
-                console.log(file);
-                if(file.uploaded.location || file.uploaded.size) {
-                    return false;
-                } else {
-                    return true;
-                }
-            })
-            return `Optimize ${pendingFiles.length} Files`
-        }
-    }
+    const { pending, optimizedFiles, classes, handleUpload, handleChange, uploadedFiles, deleteHandler, byteFormat, handleQualityChange, optimizeBtnText } = props;
+   
     return (
         <CardContent>
             <Typography className = {classes.optimizeHeader}>Optimize Images</Typography>
@@ -135,8 +119,8 @@ function OptimizeImagesCard(props) {
                             Choose File(s)
                         </Button>
                     </label>
-                    <Button disabled={(uploadedFiles.length <= 0 || loading !== null ? true : false)} classes = {{disabled: classes.submitButtonDisabled}} type="submit" name="submit" className={classes.submitButton}>
-                      {optimizeText(loading)}
+                    <Button classes={{ disabled: classes.submitButtonDisabled }} disabled={(pending || uploadedFiles.length === 0 || optimizedFiles.length >= uploadedFiles.length ? true : false)}type="submit" name="submit" className={classes.submitButton}>
+                        {(pending == true ? 'Optimizing...' : optimizeBtnText())}
                     </Button>
                 </form>
                 <div className = {classes.files}>
@@ -172,12 +156,13 @@ function OptimizeImagesCard(props) {
                                         className={classes.removeBtn}
                                         deleteHandler={deleteHandler}
                                         fileLocation={fileObj.uploaded.location}
-                                        loading={loading}
-                                        changeLoading={changeLoading}
+                                        fileName={fileObj.file.name}
+                                        pending={pending}
+                                        base64={fileObj.uploaded.base64}
                                     />
                                 </span>
                                 <div className = {classes.fileBottom}>
-                                    <Slider value={fileObj.quality}  disabled={(fileObj.uploaded.location || fileObj.uploaded.size || loading === true ? true : false)} className = {classes.qualitySlider}aria-labelledby="label" onChange={(event, value) => handleQualityChange(value, i)} />
+                                    <Slider value={fileObj.quality}  className = {classes.qualitySlider}aria-labelledby="label" onChange={(event, value) => handleQualityChange(value, i)} />
                                 </div>
                             </div>
                         ))

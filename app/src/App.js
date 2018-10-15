@@ -99,6 +99,13 @@ class App extends Component {
                       </PageContainer>
                     } />
                 )))}
+                <Route 
+                  path = "/logout"
+                  render={() => {
+                    window.localStorage.removeItem('token');
+                    return null;
+                  }} />
+
                
             </Switch>
             </CSSTransition>

@@ -3,6 +3,7 @@ let defaultState = {
     uploadedFiles: [], 
     user: null,
     auth: null,
+    uploadPending: false,
 }
 
 const reducers = (state = defaultState, action) => {
@@ -53,6 +54,7 @@ const reducers = (state = defaultState, action) => {
                 user: userData,
                 auth: action.auth
             }
+            
         case 'UPDATE_UPLOADED_FILE_LOCATION': 
             return {
                 ...state,
@@ -62,10 +64,16 @@ const reducers = (state = defaultState, action) => {
                         uploaded: {
                             location: action.location,
                             size: action.size,
+                            base64: action.base64,
                             loaded: true,
                         },
                     } : file
                 )
+            }
+        case 'UPDATE_PENDING_STATUS':
+            return {
+                ...state, 
+                uploadPending: action.status
             }
         default: return state;
     }

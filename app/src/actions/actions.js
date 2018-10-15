@@ -44,11 +44,19 @@ export const setUserCredentials = (userId, name, email, auth) => (
     }
 )
 
-export const updateUploadedFileLocation = (location, size, key) => (
+export const updateUploadedFileLocation = (location, size, base64, key) => (
     {
         type: 'UPDATE_UPLOADED_FILE_LOCATION',
         location,
         size,
+        base64,
         key,
+    }
+)
+
+export const updatePendingStatus = (status) => (
+    {
+        type: 'UPDATE_PENDING_STATUS',
+        status
     }
 )
